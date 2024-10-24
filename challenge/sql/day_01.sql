@@ -1,8 +1,8 @@
 
 with scaling_factor as (
     SELECT LEAST(
-                $resolution / ($xmax - $xmin),
-                $resolution / ($ymax - $ymin)
+                $resolution_x / ($xmax - $xmin),
+                $resolution_y / ($ymax - $ymin)
     ) as scaling_factor
  ),
 pixels as (

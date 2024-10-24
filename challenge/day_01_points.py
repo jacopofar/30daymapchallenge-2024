@@ -8,8 +8,9 @@ from challenge.helpers.extents import ExtentDegrees
 AREA = ExtentDegrees(45.131680, 45.840281, 8.640747, 9.766846)
 
 # Resolution of the resulting image
-# if the extent is not square, part of the image will not be used
-RESOLUTION = 7000
+# if the ratio is not the same as the extent, there will be an unused margin
+RESOLUTION_X = 5000
+RESOLUTION_Y = 6000
 
 
 def get_points() -> pl.DataFrame:
@@ -18,7 +19,8 @@ def get_points() -> pl.DataFrame:
         "day_01.sql",
         con,
         params=dict(
-            resolution=RESOLUTION,
+            resolution_x=RESOLUTION_X,
+            resolution_y=RESOLUTION_Y,
             xmin=AREA.lonmin,
             xmax=AREA.lonmax,
             ymin=AREA.latmin,
@@ -30,7 +32,7 @@ def get_points() -> pl.DataFrame:
 
 
 def main() -> None:
-    im = Image.new("RGB", (RESOLUTION, RESOLUTION), (255, 255, 255))
+    im = Image.new("RGB", (RESOLUTION_X, RESOLUTION_Y), (255, 255, 255))
     draw = ImageDraw.Draw(im)
     points_gray = get_points()
     max_value = points_gray.select(pl.max("density"))
