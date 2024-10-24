@@ -1,7 +1,15 @@
-with pixels as (
-    select (st_x(geometry) - $xmin) * $resolution / ($xmax - $xmin) as X,
-        ($ymax - st_y(geometry)) * $resolution / ($ymax - $ymin) as Y
+
+with scaling_factor as (
+    SELECT LEAST(
+                $resolution / ($xmax - $xmin),
+                $resolution / ($ymax - $ymin)
+    ) as scaling_factor
+ ),
+pixels as (
+    select (st_x(geometry) - $xmin) * scaling_factor.scaling_factor as X,
+        ($ymax - st_y(geometry)) * scaling_factor.scaling_factor as Y
     from read_parquet('nord-ovest-20241022_nofilter_compact.parquet') s
+    join scaling_factor on true
     where ST_GeometryType(geometry) = 'POINT'
 )
 select x::integer AS X,

@@ -7,6 +7,8 @@ from challenge.helpers.extents import ExtentDegrees
 # The area around Milan, Italy, plus some margin
 AREA = ExtentDegrees(45.131680, 45.840281, 8.640747, 9.766846)
 
+# Resolution of the resulting image
+# if the extent is not square, part of the image will not be used
 RESOLUTION = 7000
 
 
