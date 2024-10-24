@@ -1,4 +1,14 @@
+# 30 Days Map Challenge - 2024 edition
+
+This repository contains my own experiments with cartography and visualization
+for the [#30DayMapChallenge](https://30daymapchallenge.com/).
+
+For each day of November there's a theme, I will use mostly DuckDB + Python and
+ focus mostly on the area of Milan, Italy.
+
+
 # How to run
+
 First, download the PBF file for your area, using for example the extracts from
  Geofabrik.
 
