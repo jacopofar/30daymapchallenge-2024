@@ -10,8 +10,8 @@ AREA = ExtentDegrees(45.131680, 45.840281, 8.640747, 9.766846)
 
 # Resolution of the resulting image
 # if the ratio is not the same as the extent, there will be an unused margin
-RESOLUTION_X = 5000
-RESOLUTION_Y = 5000
+RESOLUTION_X = 3000
+RESOLUTION_Y = 3000
 
 
 def get_natural_points(con: DuckDBPyConnection, params: object) -> pl.DataFrame:
@@ -35,7 +35,7 @@ def get_milano_boundaries(
     return boundaries
 
 
-def main() -> None:
+def main(show: bool = True) -> Image.Image:
     con = get_connection()
     common_params = dict(
         resolution_x=RESOLUTION_X,
@@ -64,8 +64,9 @@ def main() -> None:
             fill=(255, 0, 0),
             width=1 + RESOLUTION_X // 1000,
         )
-
-    im.show()
+    if show:
+        im.show()
+    return im
 
 
 if __name__ == "__main__":
