@@ -14,9 +14,9 @@ RESOLUTION_X = 3000
 RESOLUTION_Y = 3000
 
 
-def get_natural_points(con: DuckDBPyConnection, params: object) -> pl.DataFrame:
+def get_bike_paths(con: DuckDBPyConnection, params: object) -> pl.DataFrame:
     points = run_ddb_query(
-        "day_01_natural.sql",
+        "day_02_bike_paths.sql",
         con,
         params=params,
     ).pl()
@@ -48,16 +48,22 @@ def main(show: bool = True) -> Image.Image:
     )
     im = Image.new("RGB", (RESOLUTION_X, RESOLUTION_Y), (255, 255, 255))
     draw = ImageDraw.Draw(im)
-    points_gray = get_natural_points(con, common_params)
+    bike_segments = get_bike_paths(con, common_params)
+    print(bike_segments)
     milano_border = get_milano_boundaries(con, common_params)
     con.close()
-
-    max_value = points_gray.select(pl.max("density"))
-    points_gray = points_gray.with_columns(
-        pl.col("density") * 255 // max_value,  # type: ignore
-    )
-    for x, y, v in points_gray.iter_rows():
-        draw.point((x, y), fill=(v, v, v))
+    for _f_id, points in bike_segments.iter_rows():
+        for i in range(-1, len(points) - 1):
+            draw.line(
+                (
+                    points[i]["X"],
+                    points[i]["Y"],
+                    points[i + 1]["X"],
+                    points[i + 1]["Y"],
+                ),
+                fill=(0, 0, 0),
+                width=1,
+            )
     for i in range(-1, len(milano_border) - 1):
         draw.line(
             (milano_border[i], milano_border[i + 1]),
